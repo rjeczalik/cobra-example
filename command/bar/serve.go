@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/rjeczalik/cobra-example/command"
-	mw "github.com/rjeczalik/cobra-example/command/middleware"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/pflag"
@@ -21,7 +20,7 @@ func NewServeCommand(app *command.App) *cobra.Command {
 	}
 
 	c.register(cmd.Flags())
-	mw.Use(cmd, app.ReadConfig)
+	command.Use(cmd, app.ReadConfig)
 
 	return cmd
 }

@@ -1,19 +1,32 @@
 package command
 
 import (
-	mw "github.com/rjeczalik/cobra-example/command/middleware"
+	"fmt"
 
-	"io/ioutil"
+	"github.com/spf13/cobra"
 )
 
-func (app *App) ReadConfig(next mw.CobraFunc) mw.CobraFunc {
-	if app.ConfigFile == "" {
-		return mw.Errorf("missing config file; provide with --config|-c flag")
+type CobraFunc func(cmd *cobra.Command, args []string) error
+
+type Func func(CobraFunc) CobraFunc
+
+func Errorf(message string, args ...interface{}) CobraFunc {
+	return func(*cobra.Command, []string) error {
+		return fmt.Errorf(message, args...)
 	}
-	var err error
-	app.Config, err = ioutil.ReadFile(app.ConfigFile)
-	if err != nil {
-		return mw.Errorf("error reading config file: %s", err)
+}
+
+func Use(cmd *cobra.Command, mw Func) {
+	var apply func(*cobra.Command)
+	apply = func(cmd *cobra.Command) {
+		run := cmd.RunE
+		cmd.RunE = func(cmd *cobra.Command, args []string) error {
+			return mw(run)(cmd, args)
+		}
+
+		for _, cmd := range cmd.Commands() {
+			apply(cmd)
+		}
 	}
-	return next
+	apply(cmd)
 }
