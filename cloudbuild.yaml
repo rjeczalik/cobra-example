@@ -1,0 +1,7 @@
+steps:
+- name: 'gcr.io/cloud-builders/go'
+  args: ['test', 'github.com/rjeczalik/cobra-example/...']
+- name: 'gcr.io/cloud-builders/go'
+  args: ['build', 'cmd/example']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/skilled-adapter-452/example', '.']
