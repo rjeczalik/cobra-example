@@ -1,0 +1,20 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      docker: 18
+    commands:
+      - echo GOROOT - $GOROOT
+  build:
+    commands:
+      - echo Build started on `date`
+      - go version
+      - echo Getting packages
+      - go get ./...
+      - echo Compiling the Go code...
+      - go build ./...
+      - docker version
+  post_build:
+    commands:
+      - echo Build completed on `date`
