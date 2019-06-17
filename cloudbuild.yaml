@@ -1,7 +1,9 @@
 steps:
 - name: 'gcr.io/cloud-builders/go'
   args: ['test', 'github.com/rjeczalik/cobra-example/...']
+  env: ["GOPATH=/tmp", "GO111MODULE=on"]
 - name: 'gcr.io/cloud-builders/go'
-  args: ['build', 'cmd/example']
+  args: ['build', 'github.com/rjeczalik/cobra-example/cmd/example']
+  env: ["GOPATH=/tmp", "GO111MODULE=on"]
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/skilled-adapter-452/example', '.']
+  args: ['build', '-t', 'gcr.io/glaucus-io/example', '.']
